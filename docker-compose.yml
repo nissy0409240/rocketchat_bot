@@ -50,8 +50,10 @@ services:
       - ROCKETCHAT_USER=bot
       - ROCKETCHAT_PASSWORD=botpassword
       - BOT_NAME=bot
+      - HUBOT_GOOGLE_CSE_ID=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+      - HUBOT_GOOGLE_CSE_KEY=xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
   # you can add more scripts as you'd like here, they need to be installable by npm
-      - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics
+      - EXTERNAL_SCRIPTS=hubot-help,hubot-seen,hubot-links,hubot-diagnostics,hubot-google-images
     depends_on:
       - rocketchat
     labels:
@@ -61,7 +63,16 @@ services:
   # this is used to expose the hubot port for notifications on the host on port 3001, e.g. for hubot-jenkins-notifier
     ports:
       - 3001:8080
-
+  mysql:
+    image: mysql:5.7.22
+    ports:
+      - 3306:3306
+    environment:
+      - MYSQL_USER=root
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_DATABASE=rocket_chat_bot
+    command: mysqld --character-set-server=utf8 --collation-server=utf8_general_ci --skip-character-set-client-handshake
   #traefik:
   #  image: traefik:latest
   #  restart: unless-stopped
